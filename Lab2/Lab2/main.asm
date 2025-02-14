@@ -47,15 +47,13 @@ SETUP:
 	LDI		R17, 0xFF		// Registro de comparación
 	LDI		R18, 0xFF		// Registro del delay
 	LDI		R19, 0x00		// Registro de contador1
-	LDI		R20, 0x00		// Registro de contador2
-	LDI		R21, 0x00		// Registro de contadores juntos
-	LDI		R22, 0x00		// Registro de la suma entre contadores
+	LDI		R20, 0x00		// Registro de display
+	LDI		R21, 0x00		// Registro para la SREG
 
 // Se realiza el main loop
 CONTADOR:
 	MOV		R17, R16		// movemos valor actual a calor anterior
-	OUT		PORTD, R21		// Matememos ambas salidas encendidas
-	OUT		PORTC, R22
+	OUT		PORTD, R21		// Matememos salidas encendidas
 	IN		R16, PINB		// leemos el PINB
 	CP		R16, R17		// Comparamos si no es la misma lecura que antes
 	BREQ	CONTADOR		// Si es la misma regresamos					
@@ -135,5 +133,11 @@ BOTON_SUELTO2:				// Función para esperar a que se suelte el boton
 	SBIS	PINB, 1
 	RJMP	BOTON_SUELTO2
 	RET
+
+UBICACION:
+	CPI		R19, 0x01
+	IN		R21, SREG
+	SBRC	R21, 1
+	LDI		R20, 0x
 
 // Rutinas de interrupción
