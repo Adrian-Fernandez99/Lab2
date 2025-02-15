@@ -53,7 +53,7 @@ SETUP:
 // Se realiza el main loop
 CONTADOR:
 	MOV		R17, R16		// movemos valor actual a calor anterior
-	OUT		PORTD, R21		// Matememos salidas encendidas
+	OUT		PORTD, R20		// Matememos salidas encendidas
 	IN		R16, PINB		// leemos el PINB
 	CP		R16, R17		// Comparamos si no es la misma lecura que antes
 	BREQ	CONTADOR		// Si es la misma regresamos					
@@ -68,7 +68,7 @@ DECREMENTO1:
 	BRNE	CONTADOR		// Si fue una lectura falsa se regresa al contador
 	CALL	BOTON_SUELTO	// Se espera a que se libere el boton
 	CALL	RESTA1			// Se realiza el decremento
-	CALL	CAMBIO			// Se sube a un registro compartido con el contador 2
+	CALL	UBICACION		// Se realiza la ubicación para el display 
 	JMP		CONTADOR		// Se regresa al incio
 // De aquí en adelante la logica es muy parecida
 INCREMENTO1:				
@@ -81,7 +81,7 @@ INCREMENTO1:
 	BRNE	CONTADOR
 	CALL	BOTON_SUELTO2	// Siempre se verifica que se suelte el botón
 	CALL	SUMA1			// Se realiza el incremento
-	CALL	CAMBIO			// Nuevamente se sube al registro compartido
+	CALL	UBICACION
 	JMP		CONTADOR
 
 // Sub-rutina (no de interrupción)
@@ -135,9 +135,102 @@ BOTON_SUELTO2:				// Función para esperar a que se suelte el boton
 	RET
 
 UBICACION:
+	CPI		R19, 0x00
+	IN		R21, SREG
+	BRNE	UNO
+	LDI		R20, 0x7E
+	RET
+UNO:
 	CPI		R19, 0x01
 	IN		R21, SREG
-	SBRC	R21, 1
-	LDI		R20, 0x
+	BRNE	DOS
+	LDI		R20, 0x30
+	RET
+DOS:
+	CPI		R19, 0x02
+	IN		R21, SREG
+	BRNE	TRES
+	LDI		R20, 0x6D
+	RET
+TRES:
+	CPI		R19, 0x03
+	IN		R21, SREG
+	BRNE	CUATRO
+	LDI		R20, 0x79
+	RET
+CUATRO:
+	CPI		R19, 0x04
+	IN		R21, SREG
+	BRNE	CINCO
+	LDI		R20, 0x33
+	RET
+CINCO:
+	CPI		R19, 0x05
+	IN		R21, SREG
+	BRNE	SEIS
+	LDI		R20, 0x5B
+	RET
+SEIS:
+	CPI		R19, 0x06
+	IN		R21, SREG
+	BRNE	SIETE
+	LDI		R20, 0x5F
+	RET
+SIETE:
+	CPI		R19, 0x07
+	IN		R21, SREG
+	BRNE	OCHO
+	LDI		R20, 0x70
+	RET
+OCHO:
+	CPI		R19, 0x08
+	IN		R21, SREG
+	BRNE	NUEVE
+	LDI		R20, 0x7F
+	RET
+NUEVE:
+	CPI		R19, 0x09
+	IN		R21, SREG
+	BRNE	A
+	LDI		R20, 0x7B
+	RET
+A:
+	CPI		R19, 0x0A
+	IN		R21, SREG
+	BRNE	B
+	LDI		R20, 0x77
+	RET
+B:
+	CPI		R19, 0x0B
+	IN		R21, SREG
+	BRNE	C
+	LDI		R20, 0x7F
+	RET
+C:
+	CPI		R19, 0x0C
+	IN		R21, SREG
+	BRNE	D
+	LDI		R20, 0x4E
+	RET
+D:
+	CPI		R19, 0x0D
+	IN		R21, SREG
+	BRNE	E
+	LDI		R20, 0x7E
+	RET
+E:
+	CPI		R19, 0x0E
+	IN		R21, SREG
+	BRNE	F
+	LDI		R20, 0x4F
+	RET
+F:
+	CPI		R19, 0x0F
+	IN		R21, SREG
+	BRNE	RETORNO
+	LDI		R20, 0x47
+	RET
 
+RETORNO:
+	JMP CONTADOR
 // Rutinas de interrupción
